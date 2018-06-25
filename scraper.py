@@ -1,18 +1,18 @@
 
-##### MODULES
+# MODULES
 import time
 import re
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-##### START SELENIUM
+# START SELENIUM
 chrome_path = "C:\\Program Files\\Chromedriver\\chromedriver.exe"
 driver = webdriver.Chrome(chrome_path)
 driver.get("http://www.lat-long.com/Search.cfm?q=&State=ND&County=&FeatureType=lake")
 time.sleep(2)
 
-##### DEF FNs and BUILD DATAFRAME
+# DEF FNs and BUILD DATA FRAME
 start = {'Lake': ['Lake name'],
          'Lat': [47.2],
          'Lon': [-99.1],
@@ -25,7 +25,7 @@ while p < 40:
 
     sp = 0
     while sp < 20:
-        ##### GET ACTUAL DATA FROM SUBPAGE
+        # GET ACTUAL DATA FROM SUB PAGE
         # Find Lat and Lon
         driver.find_elements_by_css_selector("tr+ tr font > a")[sp].click()
         coords = driver.find_element_by_xpath("/html/body/table/tbody/tr/td/font/table/tbody/"  # grab the Lat and Lon
@@ -55,7 +55,16 @@ while p < 40:
         driver.back()
 
     # Click Next 20
-    driver.find_element_by_link_text("Next 20").click()
+    try:
+        driver.find_element_by_link_text("Next 20").click()
+    except:
+        pass
+    try:
+        driver.find_element_by_link_text("Next 9").click()
+    except:
+        pass
     p = p + 1
+
+driver.close()
 
 mydata.to_csv("lakes.csv", sep='\t')
